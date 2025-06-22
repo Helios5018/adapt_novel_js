@@ -3277,3 +3277,5 @@ function replace_sensitive_words(novel_text, replace_way) {
   // 返回处理后的文本
   return novel_text;
 }
+
+export { replace_sensitive_words };

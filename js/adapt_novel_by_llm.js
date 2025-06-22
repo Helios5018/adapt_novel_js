@@ -14,7 +14,7 @@ async function get_llm_result(system_prompt, user_prompt) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.5-pro",
       messages: [
         { role: "system", content: system_prompt },
         { role: "user", content: user_prompt },
@@ -88,6 +88,7 @@ async function rewrite_perspective(novel_text, perspective_num) {
 
   // 解析并返回结果
   llm_result = extract_json_from_markdown(llm_result);
+  llm_result = llm_result.adapted_novel;
   console.log(llm_result);
   return llm_result;
 }
@@ -151,6 +152,7 @@ ${detail_requirement}
 
   // 解析并返回结果
   llm_result = extract_json_from_markdown(llm_result);
+  llm_result = llm_result.adapted_novel;
   console.log(llm_result);
   return llm_result;
 }
@@ -173,7 +175,7 @@ async function rewrite_novel(novel_text) {
 3. 合并或拆分句子 
 # 注意
 1. 尽量保持小说文本长度不变
-2. 输出为一整段，不要分段
+2. 小说的描述风格尽量和原风格保持一致
 3. 请按json格式输出，格式为{"adapted_novel"："xxxx"}
 4. 输出的文本必须是中文！`;
 
@@ -182,6 +184,7 @@ async function rewrite_novel(novel_text) {
 
   // 解析并返回结果
   llm_result = extract_json_from_markdown(llm_result);
+  llm_result = llm_result.adapted_novel;
   console.log(llm_result);
   return llm_result;
 }
@@ -341,9 +344,17 @@ async function add_opening(novel_text) {
 
   // 解析并返回最终结果
   llm_result = extract_json_from_markdown(llm_result);
+  llm_result = llm_result.adapted_novel;
   console.log(llm_result);
   return llm_result;
 }
+
+export {
+  rewrite_perspective,
+  rewrite_main_roles_name,
+  rewrite_novel,
+  add_opening,
+};
 
 // const novel_text = `我陪在程潜身边八年，这天他撞见我与系统的交流。
 // 我忽悠他说，我是来攻略他的。
@@ -379,8 +390,3 @@ async function add_opening(novel_text) {
 //     name: "万路",
 //   },
 // ];
-
-//rewrite_perspective(novel_text, 2);
-//rewrite_main_roles_name(novel_text, novel_name, adapted_novel_name);
-//rewrite_novel(novel_text);
-//add_opening(novel_text);

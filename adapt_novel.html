@@ -4,9 +4,452 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>小说改写</title>
+    <style>
+      /* 基础样式设置 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Microsoft YaHei", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      /* 主容器样式 */
+      .main_container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      /* 头部标题区域 */
+      .header_section {
+        background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        text-align: center;
+        padding: 30px 20px;
+      }
+
+      .header_section h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header_section p {
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      /* 内容区域 */
+      .content_section {
+        padding: 30px;
+      }
+
+      /* 输入文本区域 */
+      .input_section {
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .input_section textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 16px;
+        font-family: inherit;
+        resize: vertical;
+        transition: border-color 0.3s ease;
+      }
+
+      .input_section textarea:focus {
+        outline: none;
+        border-color: #4facfe;
+        box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+      }
+
+      /* 字数统计模块样式 */
+      .word_count_module {
+        position: absolute;
+        bottom: 15px;
+        left: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        color: #666;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        z-index: 10;
+      }
+
+      /* 字数警告样式 */
+      .word_count_warning {
+        color: #ff4444 !important;
+        background: rgba(255, 244, 244, 0.95) !important;
+        border-color: #ff4444 !important;
+        font-weight: bold;
+      }
+
+      /* 分隔线样式 */
+      .divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #4facfe, transparent);
+        margin: 30px 0;
+      }
+
+      /* 选项标题 */
+      .options_title {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      /* 角色名改写区域 */
+      .character_section {
+        background: #f8f9ff;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #4facfe;
+      }
+
+      .character_row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        gap: 10px;
+      }
+
+      .character_row span {
+        min-width: 30px;
+        font-weight: bold;
+        color: #666;
+      }
+
+      .character_row input[type="text"] {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .character_group {
+        display: block;
+        margin-top: 20px;
+      }
+
+      /* 人称改写区域 */
+      .perspective_section {
+        background: #fff8f0;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #ff9500;
+      }
+
+      .radio_group {
+        margin-top: 10px;
+      }
+
+      .radio_select {
+        display: block;
+      }
+
+      .radio_group label {
+        margin-left: 5px;
+        margin-right: 20px;
+      }
+
+      /* 精彩开头区域 */
+      .opening_section {
+        background: #f0fff0;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #32cd32;
+      }
+
+      /* 降重改写区域 */
+      .rewrite_section {
+        background: #fff5ee;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #ff7f50;
+      }
+
+      /* 敏感词替换区域 */
+      .sensitive_section {
+        background: #fff0f5;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #e91e63;
+      }
+
+      .sensitive_section select {
+        margin-top: 10px;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .select_group {
+        display: block;
+      }
+
+      /* 按钮样式 */
+      .action_section {
+        text-align: center;
+        margin: 30px 0;
+      }
+
+      .action_section button {
+        background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 18px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        font-weight: bold;
+      }
+
+      .action_section button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+      }
+
+      /* 输出结果区域 */
+      .output_section {
+        margin-top: 30px;
+      }
+
+      .output_title {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+      }
+
+      .output_section textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 16px;
+        font-family: inherit;
+        background-color: #f9f9f9;
+        resize: vertical;
+      }
+
+      /* 复选框和单选框样式 */
+      input[type="checkbox"],
+      input[type="radio"] {
+        margin-right: 8px;
+        transform: scale(1.2);
+      }
+
+      label {
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      /* 响应式设计 - 手机端适配 */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .header_section {
+          padding: 20px 15px;
+        }
+
+        .header_section h1 {
+          font-size: 2em;
+        }
+
+        .content_section {
+          padding: 20px;
+        }
+
+        .character_row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .character_row span {
+          margin-bottom: 5px;
+        }
+
+        .radio_group {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .action_section button {
+          width: 100%;
+          padding: 12px 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header_section h1 {
+          font-size: 1.8em;
+        }
+
+        .content_section {
+          padding: 15px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <script src="adapt_novel.js"></script>
-    <script src="replace_sensitive_words.js"></script>
+    <div class="main_container">
+      <!-- 头部标题区域 -->
+      <div class="header_section">
+        <h1>小说改写神器</h1>
+        <p>v1.0</p>
+      </div>
+
+      <!-- 主要内容区域 -->
+      <div class="content_section">
+        <!-- 小说输入区域 -->
+        <div class="input_section">
+          <textarea
+            id="novel_input"
+            rows="10"
+            placeholder="请输入小说内容"
+          ></textarea>
+          <!-- 字数统计模块 -->
+          <div class="word_count_module" id="word_count_display">
+            <span id="word_count">0</span><span>/6000</span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- 选项标题 -->
+        <div class="options_title">
+          <p>请选择需要改写的内容：</p>
+        </div>
+
+        <!-- 角色名改写区域 -->
+        <div class="character_section">
+          <div class="option_header">
+            <input type="checkbox" id="character_adapt" />
+            <label for="character_adapt">是否改写角色名</label>
+          </div>
+          <div class="character_group" id="character_group">
+            <div class="character_row">
+              <span>1.</span>
+              <input type="text" id="original_char_1" placeholder="原角色名" />
+              <input
+                type="text"
+                id="new_char_1"
+                placeholder="新角色名（可不填）"
+              />
+            </div>
+            <div class="character_row">
+              <span>2.</span>
+              <input type="text" id="original_char_2" placeholder="原角色名" />
+              <input
+                type="text"
+                id="new_char_2"
+                placeholder="新角色名（可不填）"
+              />
+            </div>
+            <div class="character_row">
+              <span>3.</span>
+              <input type="text" id="original_char_3" placeholder="原角色名" />
+              <input
+                type="text"
+                id="new_char_3"
+                placeholder="新角色名（可不填）"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 人称改写区域 -->
+        <div class="perspective_section">
+          <div class="checkbox_control">
+            <label>
+              <input type="checkbox" id="perspective_adapt" /> 是否改写人称
+            </label>
+          </div>
+          <div id="perspective_group" class="radio_group">
+            <div class="radio_select">
+              <input type="radio" name="perspective" id="first_person" />
+              <label for="first_person">第一人称</label>
+              <input type="radio" name="perspective" id="second_person" />
+              <label for="second_person">第二人称</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 精彩开头区域 -->
+        <div class="opening_section">
+          <input type="checkbox" id="opening_adapt" />
+          <label for="opening_adapt">是否增加精彩开头</label>
+        </div>
+
+        <!-- 降重改写区域 -->
+        <div class="rewrite_section">
+          <input type="checkbox" id="rewrite_adapt" />
+          <label for="rewrite_adapt">是否降重改写</label>
+        </div>
+
+        <!-- 敏感词替换区域 -->
+        <div class="sensitive_section">
+          <div class="checkbox_control">
+            <label>
+              <input type="checkbox" id="sensitive_adapt" /> 是否进行敏感词替换
+            </label>
+          </div>
+          <div id="sensitive_group" class="select_group">
+            <select name="select" id="select">
+              <option value="*">替换为*号</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 开始改写按钮 -->
+        <div class="action_section">
+          <button id="adapt_btn">开始改写</button>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- 输出结果区域 -->
+        <div class="output_section">
+          <div class="output_title">
+            <p>输出结果：</p>
+          </div>
+          <div>
+            <textarea name="output" id="output" rows="10" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="js\adapt_novel.js"></script>
   </body>
 </html>
