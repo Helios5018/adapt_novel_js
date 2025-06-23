@@ -6,6 +6,20 @@ import {
   add_opening,
 } from "./adapt_novel_by_llm.js";
 
+/**
+ * @description 主函数，根据传入的选项对小说文本进行改编
+ * @param {string} novel_text - 原始小说文本
+ * @param {boolean} rewrite_perspective_or_not - 是否重写视角
+ * @param {number} perspective_num - 视角编号 (例如 1 代表第一人称, 3 代表第三人称)
+ * @param {boolean} rewrite_main_roles_name_or_not - 是否重写主角名
+ * @param {string} novel_name - 原始小说名
+ * @param {string} adapted_novel_name - 改编后的小说名
+ * @param {boolean} rewrite_novel_or_not - 是否重写小说内容
+ * @param {boolean} add_opening_or_not - 是否添加开头
+ * @param {boolean} replace_sensitive_words_or_not - 是否替换敏感词
+ * @param {string} replace_way - 敏感词替换方式
+ * @returns {Promise<string>} - 返回改编后的小说文本
+ */
 async function adapt_novel_main(
   novel_text,
   rewrite_perspective_or_not,
@@ -18,9 +32,12 @@ async function adapt_novel_main(
   replace_sensitive_words_or_not,
   replace_way
 ) {
+  // 初始化改编后的小说文本为原始文本
   let adapted_novel_text = novel_text;
 
+  // 检查是否需要重写主角名
   if (rewrite_main_roles_name_or_not) {
+    // 调用函数重写主角名
     adapted_novel_text = await rewrite_main_roles_name(
       adapted_novel_text,
       novel_name,
@@ -28,28 +45,37 @@ async function adapt_novel_main(
     );
   }
 
+  // 检查是否需要重写视角
   if (rewrite_perspective_or_not) {
+    // 调用函数重写小说视角
     adapted_novel_text = await rewrite_perspective(
       adapted_novel_text,
       perspective_num
     );
   }
 
+  // 检查是否需要添加开头
   if (add_opening_or_not) {
+    // 调用函数添加开头
     adapted_novel_text = await add_opening(adapted_novel_text);
   }
 
+  // 检查是否需要重写小说
   if (rewrite_novel_or_not) {
+    // 调用函数重写小说
     adapted_novel_text = await rewrite_novel(adapted_novel_text);
   }
 
+  // 检查是否需要替换敏感词
   if (replace_sensitive_words_or_not) {
+    // 调用函数替换敏感词
     adapted_novel_text = replace_sensitive_words(
       adapted_novel_text,
       replace_way
     );
   }
 
+  // 返回最终改编后的小说文本
   return adapted_novel_text;
 }
 
@@ -204,8 +230,12 @@ adapt_btn.addEventListener("click", async function () {
   // 5. 获取敏感词替换选项
   let replace_sensitive_words_or_not = sensitive_adapt_or_not.checked;
   let replace_way = "";
-  if (select_way.value === "*") {
+  if (select_way.value === "symbol") {
     replace_way = "symbol";
+  } else if (select_way.value === "pinyin_one") {
+    replace_way = "pinyin_one";
+  } else if (select_way.value === "pinyin_all") {
+    replace_way = "pinyin_all";
   }
 
   // 5.5 判断是否没有选中任何一个改写选项
@@ -308,4 +338,107 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init_word_count_module);
 } else {
   init_word_count_module();
+}
+
+/**
+ * 初始化清空按钮功能
+ * 点击清空按钮时清空输入框内容
+ */
+function init_clear_button() {
+  const clear_input_btn = document.getElementById("clear_input_btn");
+  const novel_input = document.getElementById("novel_input");
+  const word_count_span = document.getElementById("word_count");
+  const word_count_display = document.getElementById("word_count_display");
+
+  clear_input_btn.addEventListener("click", function() {
+    // 清空输入框内容
+    novel_input.value = "";
+    // 更新字数显示
+    word_count_span.textContent = "0";
+    // 移除警告样式
+    word_count_display.classList.remove("word_count_warning");
+    // 聚焦到输入框
+    novel_input.focus();
+  });
+}
+
+/**
+ * 初始化复制按钮功能
+ * 点击复制按钮时将输出框内容复制到剪切板
+ * 当输出框为空时，复制按钮置灰不可点击
+ */
+function init_copy_button() {
+  const copy_output_btn = document.getElementById("copy_output_btn");
+  const output = document.getElementById("output");
+
+  /**
+   * 更新复制按钮状态
+   * 根据输出框是否有内容来启用或禁用复制按钮
+   */
+  function update_copy_button_state() {
+    if (output.value.trim() === "") {
+      copy_output_btn.disabled = true;
+    } else {
+      copy_output_btn.disabled = false;
+    }
+  }
+
+  // 监听输出框内容变化
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'childList' || mutation.type === 'characterData') {
+        update_copy_button_state();
+      }
+    });
+  });
+
+  // 监听输出框value属性变化
+  output.addEventListener('input', update_copy_button_state);
+  
+  // 使用定时器定期检查输出框内容变化（作为备用方案）
+  let last_output_value = output.value;
+  setInterval(function() {
+    if (output.value !== last_output_value) {
+      last_output_value = output.value;
+      update_copy_button_state();
+    }
+  }, 500);
+
+  // 复制按钮点击事件
+   copy_output_btn.addEventListener("click", async function() {
+     try {
+       // 选中输出框内容
+       output.select();
+       output.setSelectionRange(0, 99999); // 兼容移动设备
+       
+       // 尝试使用现代的 Clipboard API
+       if (navigator.clipboard && window.isSecureContext) {
+         await navigator.clipboard.writeText(output.value);
+       } else {
+         // 降级到传统的 execCommand 方法
+         document.execCommand('copy');
+       }
+       
+     } catch (err) {
+       console.error('复制失败:', err);
+       alert('复制失败，请手动选择文本进行复制');
+     }
+   });
+
+  // 初始化按钮状态
+  update_copy_button_state();
+}
+
+// 页面加载完成后初始化所有功能
+document.addEventListener("DOMContentLoaded", function () {
+  init_word_count_module();
+  init_clear_button();
+  init_copy_button();
+});
+
+// 如果页面已经加载完成，直接初始化所有功能
+if (document.readyState !== "loading") {
+  init_word_count_module();
+  init_clear_button();
+  init_copy_button();
 }

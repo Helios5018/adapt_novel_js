@@ -3249,6 +3249,41 @@ function replace_sensitive_word_with_symbols(sensitive_word) {
   return "*".repeat(word_length);
 }
 
+// 使用全局的 pinyinPro
+const { pinyin } = pinyinPro;
+/**
+ * 将敏感词全部转换为拼音
+ * @param {string} sensitive_word - 需要转换的敏感词
+ * @returns {string} 转换后的拼音
+ */
+function replace_sensitive_word_with_pinyin_all(sensitive_word) {
+  // 基础拼音转换
+  const result = pinyin(sensitive_word, { toneType: "none" });
+  return result;
+}
+
+/**
+ * 将敏感词中的一个随机汉字换成拼音
+ * @param {string} sensitive_word - 需要转换的敏感词
+ * @returns {string} 转换后的包含拼音的汉字
+ */
+function replace_sensitive_word_with_pinyin_one(sensitive_word) {
+  // 随机选择一个汉字
+  let random_index = Math.floor(Math.random() * sensitive_word.length);
+  let random_char = sensitive_word[random_index];
+
+  // 转换为拼音
+  let pinyin_result = pinyin(random_char, { toneType: "none" });
+
+  // 正确提取拼音字符串
+  let pinyin_string = pinyin_result; // 获取第一个字符的第一个拼音
+
+  // 替换原始字符串中的随机汉字
+  let result = sensitive_word.replace(random_char, pinyin_string);
+
+  return result;
+}
+
 /**
  * 根据指定方式替换文本中的敏感词
  * 先检测文本中的所有敏感词，然后根据替换方式进行相应的替换操作
@@ -3261,6 +3296,7 @@ function replace_sensitive_words(novel_text, replace_way) {
   let sensitive_word_array = detective_sensitive_words(novel_text);
 
   // 根据替换方式进行处理
+  // 使用*进行替换
   if (replace_way === "symbol") {
     // 遍历所有检测到的敏感词
     for (let sensitive_word_obj of sensitive_word_array) {
@@ -3268,6 +3304,32 @@ function replace_sensitive_words(novel_text, replace_way) {
 
       // 生成替换用的星号字符串
       let replace_word = replace_sensitive_word_with_symbols(sensitive_word);
+
+      // 在文本中替换敏感词（注意：这里只会替换第一个匹配项）
+      novel_text = novel_text.replace(sensitive_word, replace_word);
+    }
+  }
+  // 使用拼音随机替换一个汉字
+  else if (replace_way === "pinyin_one") {
+    // 遍历所有检测到的敏感词
+    for (let sensitive_word_obj of sensitive_word_array) {
+      let sensitive_word = sensitive_word_obj.sensitive_word;
+
+      // 生成替换用的拼音字符串
+      let replace_word = replace_sensitive_word_with_pinyin_one(sensitive_word);
+
+      // 在文本中替换敏感词（注意：这里只会替换第一个匹配项）
+      novel_text = novel_text.replace(sensitive_word, replace_word);
+    }
+  }
+  // 使用拼音全部替换
+  else if (replace_way === "pinyin_all") {
+    // 遍历所有检测到的敏感词
+    for (let sensitive_word_obj of sensitive_word_array) {
+      let sensitive_word = sensitive_word_obj.sensitive_word;
+
+      // 生成替换用的拼音字符串
+      let replace_word = replace_sensitive_word_with_pinyin_all(sensitive_word);
 
       // 在文本中替换敏感词（注意：这里只会替换第一个匹配项）
       novel_text = novel_text.replace(sensitive_word, replace_word);

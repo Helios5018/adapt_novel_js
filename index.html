@@ -93,6 +93,67 @@
         z-index: 10;
       }
 
+      /* 清空按钮样式 */
+      .clear_button {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        background: #fd9d9d;
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .clear_button:hover {
+        background: #ff5252;
+        transform: scale(1.1);
+      }
+
+      /* 复制按钮样式 */
+      .copy_button {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        background: #4facfe;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .copy_button:hover {
+        background: #00f2fe;
+        transform: translateY(-1px);
+      }
+
+      .copy_button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .copy_button:disabled:hover {
+        background: #ccc;
+        transform: none;
+      }
+
       /* 字数警告样式 */
       .word_count_warning {
         color: #ff4444 !important;
@@ -240,6 +301,7 @@
       /* 输出结果区域 */
       .output_section {
         margin-top: 30px;
+        position: relative;
       }
 
       .output_title {
@@ -258,6 +320,10 @@
         font-family: inherit;
         background-color: #f9f9f9;
         resize: vertical;
+      }
+
+      .output_container {
+        position: relative;
       }
 
       /* 复选框和单选框样式 */
@@ -321,13 +387,15 @@
         }
       }
     </style>
+    <!-- 在 </head> 标签前添加 -->
+    <script src="https://cdn.jsdelivr.net/gh/zh-lx/pinyin-pro@latest/dist/pinyin-pro.js"></script>
   </head>
   <body>
     <div class="main_container">
       <!-- 头部标题区域 -->
       <div class="header_section">
         <h1>小说改写神器</h1>
-        <p>v1.0</p>
+        <p>专为小说推文行业设计</p>
       </div>
 
       <!-- 主要内容区域 -->
@@ -343,6 +411,10 @@
           <div class="word_count_module" id="word_count_display">
             <span id="word_count">0</span><span>/6000</span>
           </div>
+          <!-- 清空按钮 -->
+          <button class="clear_button" id="clear_input_btn" title="清空输入框">
+            ×
+          </button>
         </div>
 
         <hr class="divider" />
@@ -427,7 +499,9 @@
           </div>
           <div id="sensitive_group" class="select_group">
             <select name="select" id="select">
-              <option value="*">替换为*号</option>
+              <option value="pinyin_one">用拼音替换一个汉字</option>
+              <option value="pinyin_all">用拼音替换全部汉字</option>
+              <option value="symbol">全部替换为*号</option>
             </select>
           </div>
         </div>
@@ -444,8 +518,17 @@
           <div class="output_title">
             <p>输出结果：</p>
           </div>
-          <div>
+          <div class="output_container">
             <textarea name="output" id="output" rows="10" readonly></textarea>
+            <!-- 复制按钮 -->
+            <button
+              class="copy_button"
+              id="copy_output_btn"
+              title="复制到剪切板"
+              disabled
+            >
+              复制
+            </button>
           </div>
         </div>
       </div>
