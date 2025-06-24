@@ -272,6 +272,29 @@ adapt_btn.addEventListener("click", async function () {
 
     // 7. 将结果显示在输出框
     output.value = adapted_novel_text;
+    
+    // 手动触发输出区域字数统计更新
+  const output_word_count_span = document.getElementById("output_word_count");
+  const output_word_count_display = document.getElementById("output_word_count_display");
+  if (output_word_count_span && output_word_count_display) {
+    const word_count = adapted_novel_text.length;
+    output_word_count_span.textContent = word_count;
+    if (word_count > 0) {
+      output_word_count_display.style.display = "block";
+    } else {
+      output_word_count_display.style.display = "none";
+    }
+  }
+  
+  // 手动触发去除换行按钮状态更新
+  const remove_linebreak_btn = document.getElementById("remove_linebreak_btn");
+  if (remove_linebreak_btn) {
+    if (adapted_novel_text.trim() === "") {
+      remove_linebreak_btn.disabled = true;
+    } else {
+      remove_linebreak_btn.disabled = false;
+    }
+  }
   } catch (error) {
     console.error("改写小说时发生错误:", error);
     output.value = "改写失败，请检查控制台错误信息。";
@@ -363,6 +386,123 @@ function init_clear_button() {
 }
 
 /**
+ * 初始化输出区域字数统计功能
+ * 监听输出框内容变化，实时更新字数统计
+ * 当输出框为空时隐藏字数统计，有内容时显示
+ */
+function init_output_word_count_module() {
+  const output = document.getElementById("output");
+  const output_word_count_span = document.getElementById("output_word_count");
+  const output_word_count_display = document.getElementById("output_word_count_display");
+
+  /**
+   * 更新输出区域字数统计显示
+   * @param {string} text - 要统计字数的文本
+   */
+  function update_output_word_count(text) {
+    const word_count = text.length;
+    output_word_count_span.textContent = word_count;
+
+    // 根据是否有内容决定是否显示字数统计
+    if (word_count > 0) {
+      output_word_count_display.style.display = "block";
+    } else {
+      output_word_count_display.style.display = "none";
+    }
+  }
+
+  // 监听输出框内容变化事件
+  output.addEventListener("input", function () {
+    update_output_word_count(this.value);
+  });
+
+  // 使用MutationObserver监听输出框value属性的变化
+  const observer = new MutationObserver(function() {
+    update_output_word_count(output.value);
+  });
+
+  // 观察输出框的属性变化
+  observer.observe(output, {
+    attributes: true,
+    attributeFilter: ['value']
+  });
+
+  // 使用定时器定期检查输出框内容变化（确保能捕获到所有变化）
+  let last_output_value = output.value;
+  setInterval(function() {
+    if (output.value !== last_output_value) {
+      last_output_value = output.value;
+      update_output_word_count(output.value);
+    }
+  }, 100);
+
+  // 初始化字数显示
+  update_output_word_count(output.value);
+}
+
+/**
+ * 初始化去除换行按钮功能
+ * 点击按钮时去除输出框中的所有换行符
+ * 当输出框为空时，按钮置灰不可点击
+ */
+function init_remove_linebreak_button() {
+  const remove_linebreak_btn = document.getElementById("remove_linebreak_btn");
+  const output = document.getElementById("output");
+
+  /**
+   * 更新去除换行按钮状态
+   * 根据输出框是否有内容来启用或禁用按钮
+   */
+  function update_remove_linebreak_button_state() {
+    if (output.value.trim() === "") {
+      remove_linebreak_btn.disabled = true;
+    } else {
+      remove_linebreak_btn.disabled = false;
+    }
+  }
+
+  // 监听输出框内容变化
+  output.addEventListener('input', update_remove_linebreak_button_state);
+  
+  // 使用定时器定期检查输出框内容变化（作为备用方案）
+  let last_output_value = output.value;
+  setInterval(function() {
+    if (output.value !== last_output_value) {
+      last_output_value = output.value;
+      update_remove_linebreak_button_state();
+    }
+  }, 500);
+
+  // 去除换行按钮点击事件
+  remove_linebreak_btn.addEventListener("click", function() {
+    if (output.value.trim() !== "") {
+      // 去除所有换行符（包括\n、\r\n、\r）
+      const text_without_linebreaks = output.value.replace(/[\r\n]+/g, '');
+      output.value = text_without_linebreaks;
+      
+      // 手动触发输出区域字数统计更新
+      const output_word_count_span = document.getElementById("output_word_count");
+      const output_word_count_display = document.getElementById("output_word_count_display");
+      if (output_word_count_span && output_word_count_display) {
+        const word_count = text_without_linebreaks.length;
+        output_word_count_span.textContent = word_count;
+        if (word_count > 0) {
+          output_word_count_display.style.display = "block";
+        } else {
+          output_word_count_display.style.display = "none";
+        }
+      }
+      
+      // 更新按钮状态
+      update_remove_linebreak_button_state();
+    }
+  });
+
+  // 初始化按钮状态
+  update_remove_linebreak_button_state();
+}
+
+/**
  * 初始化复制按钮功能
  * 点击复制按钮时将输出框内容复制到剪切板
  * 当输出框为空时，复制按钮置灰不可点击
@@ -434,6 +574,8 @@ document.addEventListener("DOMContentLoaded", function () {
   init_word_count_module();
   init_clear_button();
   init_copy_button();
+  init_output_word_count_module();
+  init_remove_linebreak_button();
 });
 
 // 如果页面已经加载完成，直接初始化所有功能
@@ -441,4 +583,6 @@ if (document.readyState !== "loading") {
   init_word_count_module();
   init_clear_button();
   init_copy_button();
+  init_output_word_count_module();
+  init_remove_linebreak_button();
 }

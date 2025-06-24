@@ -128,7 +128,7 @@
         background: #4facfe;
         color: white;
         border: none;
-        padding: 8px 12px;
+        padding: 8px 23px;
         border-radius: 20px;
         cursor: pointer;
         font-size: 12px;
@@ -150,6 +150,40 @@
       }
 
       .copy_button:disabled:hover {
+        background: #ccc;
+        transform: none;
+      }
+
+      /* 去除换行按钮样式 */
+      .remove_linebreak_button {
+        position: absolute;
+        bottom: 55px;
+        right: 15px;
+        background: #ff9500;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .remove_linebreak_button:hover {
+        background: #e68900;
+        transform: translateY(-1px);
+      }
+
+      .remove_linebreak_button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .remove_linebreak_button:disabled:hover {
         background: #ccc;
         transform: none;
       }
@@ -520,6 +554,23 @@
           </div>
           <div class="output_container">
             <textarea name="output" id="output" rows="10" readonly></textarea>
+            <!-- 输出区域字数统计模块 -->
+            <div
+              class="word_count_module"
+              id="output_word_count_display"
+              style="display: none"
+            >
+              <span id="output_word_count">0</span><span> 字</span>
+            </div>
+            <!-- 去除换行按钮 -->
+            <button
+              class="remove_linebreak_button"
+              id="remove_linebreak_btn"
+              title="去除所有换行"
+              disabled
+            >
+              去除换行
+            </button>
             <!-- 复制按钮 -->
             <button
               class="copy_button"
