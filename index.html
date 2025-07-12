@@ -14,7 +14,7 @@
 
       body {
         font-family: "Microsoft YaHei", Arial, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #f8f9fa;
         min-height: 100vh;
         padding: 20px;
         color: #333;
@@ -25,28 +25,29 @@
         max-width: 800px;
         margin: 0 auto;
         background: white;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
         overflow: hidden;
       }
 
       /* 头部标题区域 */
       .header_section {
-        background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
-        color: white;
+        background: white;
+        color: #333;
         text-align: center;
-        padding: 30px 20px;
+        padding: 40px 20px;
+        border-bottom: 1px solid #e9ecef;
       }
 
       .header_section h1 {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2.2em;
+        margin-bottom: 8px;
+        font-weight: 300;
       }
 
       .header_section p {
-        font-size: 1.2em;
-        opacity: 0.9;
+        font-size: 1em;
+        color: #6c757d;
       }
 
       /* 内容区域 */
@@ -63,18 +64,17 @@
       .input_section textarea {
         width: 100%;
         padding: 15px;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
         font-size: 16px;
         font-family: inherit;
         resize: vertical;
-        transition: border-color 0.3s ease;
+        transition: border-color 0.2s ease;
       }
 
       .input_section textarea:focus {
         outline: none;
-        border-color: #4facfe;
-        box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+        border-color: #495057;
       }
 
       /* 字数统计模块样式 */
@@ -82,14 +82,12 @@
         position: absolute;
         bottom: 15px;
         left: 10px;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 5px 10px;
-        border-radius: 15px;
+        background: white;
+        padding: 4px 8px;
+        border-radius: 4px;
         font-size: 12px;
-        color: #666;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        color: #6c757d;
+        border: 1px solid #dee2e6;
         z-index: 10;
       }
 
@@ -98,26 +96,23 @@
         position: absolute;
         bottom: 15px;
         right: 15px;
-        background: #fd9d9d;
+        background: #6c757d;
         color: white;
         border: none;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
+        border-radius: 4px;
+        width: 28px;
+        height: 28px;
         cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
+        font-size: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        transition: background-color 0.2s ease;
         z-index: 10;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
 
       .clear_button:hover {
-        background: #ff5252;
-        transform: scale(1.1);
+        background: #495057;
       }
 
       /* 复制按钮样式 */
@@ -125,101 +120,90 @@
         position: absolute;
         bottom: 15px;
         right: 15px;
-        background: #4facfe;
+        background: #495057;
         color: white;
         border: none;
-        padding: 8px 23px;
-        border-radius: 20px;
+        border-radius: 4px;
+        padding: 6px 24px;
         cursor: pointer;
         font-size: 12px;
-        font-weight: bold;
-        transition: all 0.3s ease;
+        transition: background-color 0.2s ease;
         z-index: 10;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
 
       .copy_button:hover {
-        background: #00f2fe;
-        transform: translateY(-1px);
+        background: #343a40;
       }
 
       .copy_button:disabled {
-        background: #ccc;
+        background: #adb5bd;
         cursor: not-allowed;
-        transform: none;
       }
 
       .copy_button:disabled:hover {
-        background: #ccc;
-        transform: none;
+        background: #adb5bd;
       }
 
       /* 去除换行按钮样式 */
       .remove_linebreak_button {
         position: absolute;
-        bottom: 55px;
+        bottom: 50px;
         right: 15px;
-        background: #ff9500;
+        background: #6c757d;
         color: white;
         border: none;
-        padding: 8px 12px;
-        border-radius: 20px;
+        border-radius: 4px;
+        padding: 6px 12px;
         cursor: pointer;
         font-size: 12px;
-        font-weight: bold;
-        transition: all 0.3s ease;
+        transition: background-color 0.2s ease;
         z-index: 10;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
 
       .remove_linebreak_button:hover {
-        background: #e68900;
-        transform: translateY(-1px);
+        background: #495057;
       }
 
       .remove_linebreak_button:disabled {
-        background: #ccc;
+        background: #adb5bd;
         cursor: not-allowed;
-        transform: none;
       }
 
       .remove_linebreak_button:disabled:hover {
-        background: #ccc;
-        transform: none;
+        background: #adb5bd;
       }
 
       /* 字数警告样式 */
       .word_count_warning {
-        color: #ff4444 !important;
-        background: rgba(255, 244, 244, 0.95) !important;
-        border-color: #ff4444 !important;
-        font-weight: bold;
+        color: #dc3545 !important;
+        background: #f8d7da !important;
+        border-color: #dc3545 !important;
       }
 
       /* 分隔线样式 */
       .divider {
         border: none;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #4facfe, transparent);
+        height: 1px;
+        background: #dee2e6;
         margin: 30px 0;
       }
 
       /* 选项标题 */
       .options_title {
-        font-size: 1.3em;
-        font-weight: bold;
-        color: #333;
+        font-size: 1.1em;
+        font-weight: 400;
+        color: #495057;
         margin-bottom: 20px;
-        text-align: center;
+        text-align: left;
       }
 
       /* 角色名改写区域 */
       .character_section {
-        background: #f8f9ff;
+        background: #f8f9fa;
         padding: 20px;
-        border-radius: 10px;
         margin-bottom: 20px;
-        border-left: 4px solid #4facfe;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
       }
 
       .character_row {
@@ -238,8 +222,8 @@
       .character_row input[type="text"] {
         flex: 1;
         padding: 8px 12px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
         font-size: 14px;
       }
 
@@ -250,11 +234,11 @@
 
       /* 人称改写区域 */
       .perspective_section {
-        background: #fff8f0;
+        background: #f8f9fa;
         padding: 20px;
-        border-radius: 10px;
         margin-bottom: 20px;
-        border-left: 4px solid #ff9500;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
       }
 
       .radio_group {
@@ -272,36 +256,36 @@
 
       /* 精彩开头区域 */
       .opening_section {
-        background: #f0fff0;
+        background: #f8f9fa;
         padding: 20px;
-        border-radius: 10px;
         margin-bottom: 20px;
-        border-left: 4px solid #32cd32;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
       }
 
       /* 降重改写区域 */
       .rewrite_section {
-        background: #fff5ee;
+        background: #f8f9fa;
         padding: 20px;
-        border-radius: 10px;
         margin-bottom: 20px;
-        border-left: 4px solid #ff7f50;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
       }
 
       /* 敏感词替换区域 */
       .sensitive_section {
-        background: #fff0f5;
+        background: #f8f9fa;
         padding: 20px;
-        border-radius: 10px;
         margin-bottom: 20px;
-        border-left: 4px solid #e91e63;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
       }
 
       .sensitive_section select {
         margin-top: 10px;
         padding: 8px 12px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
         font-size: 14px;
       }
 
@@ -316,20 +300,19 @@
       }
 
       .action_section button {
-        background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+        background: #495057;
         color: white;
         border: none;
-        padding: 15px 40px;
-        font-size: 18px;
-        border-radius: 25px;
+        border-radius: 6px;
+        padding: 12px 32px;
+        font-size: 16px;
         cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        font-weight: bold;
+        transition: background-color 0.2s ease;
+        font-weight: 400;
       }
 
       .action_section button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        background: #343a40;
       }
 
       /* 输出结果区域 */
@@ -348,11 +331,11 @@
       .output_section textarea {
         width: 100%;
         padding: 15px;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
         font-size: 16px;
         font-family: inherit;
-        background-color: #f9f9f9;
+        background-color: #f8f9fa;
         resize: vertical;
       }
 
@@ -364,11 +347,10 @@
       input[type="checkbox"],
       input[type="radio"] {
         margin-right: 8px;
-        transform: scale(1.2);
       }
 
       label {
-        font-weight: 500;
+        font-weight: 400;
         cursor: pointer;
       }
 
@@ -421,8 +403,6 @@
         }
       }
     </style>
-    <!-- 在 </head> 标签前添加 -->
-    <script src="https://cdn.jsdelivr.net/gh/zh-lx/pinyin-pro@latest/dist/pinyin-pro.js"></script>
   </head>
   <body>
     <div class="main_container">

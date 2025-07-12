@@ -1,10 +1,10 @@
-import { replace_sensitive_words } from "./replace_sensitive_words.js";
 import {
+  replace_sensitive_words,
   rewrite_perspective,
   rewrite_main_roles_name,
   rewrite_novel,
-  add_opening,
-} from "./adapt_novel_by_llm.js";
+  add_opening
+} from "./get_backend_data.js";
 
 /**
  * @description 主函数，根据传入的选项对小说文本进行改编
@@ -69,7 +69,7 @@ async function adapt_novel_main(
   // 检查是否需要替换敏感词
   if (replace_sensitive_words_or_not) {
     // 调用函数替换敏感词
-    adapted_novel_text = replace_sensitive_words(
+    adapted_novel_text = await replace_sensitive_words(
       adapted_novel_text,
       replace_way
     );
